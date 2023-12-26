@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
 
-        <h1>Company List</h1>
+        <h3>Company List</h3>
 
 
         <div class="modal fade" id="addCompanyModal" tabindex="-1" aria-labelledby="addCompanyModalLabel" aria-hidden="true">
@@ -80,7 +80,7 @@
             <a href="{{ route('export.all.companies.pdf') }}" class="btn btn-danger">Export to PDF</a>
     
         </div>
-        <table class="table">
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -164,7 +164,7 @@
             $('.editCompanyBtn').on('click', function() {
                 var companyId = $(this).data('company-id');
                 $.ajax({
-                    url: '/companies/' + companyId + '/edit',
+                    url: '/employee/' + companyId + '/edit',
                     type: 'GET',
                     dataType: 'json',
                     success: function(response) {

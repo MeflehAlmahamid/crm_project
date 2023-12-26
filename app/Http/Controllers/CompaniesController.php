@@ -8,7 +8,7 @@ use App\Exports\CompaniesExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\PDF;
 use Barryvdh\Snappy\Facades\SnappyPdf;
-
+use Illuminate\Support\Facades\DB;
 
 class CompaniesController extends Controller
 {
@@ -47,7 +47,7 @@ class CompaniesController extends Controller
 
     public function viewEmployees(Company $company)
     {
-        $employees = $company->employees;
+        $employees = DB::table('employees')->where('company_id', $company->id)->paginate(10);
 
         return view('companies.view_employees', compact('company', 'employees'));
     }
@@ -81,29 +81,13 @@ class CompaniesController extends Controller
         return Excel::download(new CompaniesExport, 'companies.xlsx');
     }
 
-//     public function generatePDF()
-// {
-//     $pdf = app('dompdf.wrapper');
-//     $pdf->loadView('pdf.view', ['data' => $data]);
+    public function exportAllCompaniesPDF()
+    {
+        $companies = Company::all();
 
-//     return $pdf->download('document.pdf');
-// }
+        $pdf = SnappyPdf::loadView('pdf.export_all_companies', compact('companies'));
 
-//     public function exportPDF()
-//     {
-//         $companies = Company::all();
-
-//         $pdf = PDF::loadView('companies.pdf', compact('companies'));
-//         return $pdf->download('companies.pdf');
-//     }
-
-        public function exportAllCompaniesPDF()
-        {
-            $companies = Company::all();
-
-            $pdf = SnappyPdf::loadView('pdf.export_all_companies', compact('companies'));
-
-            return $pdf->download('all_companies_document.pdf');
-        }
+        return $pdf->download('all_companies_document.pdf');
+    }
 
 }
